@@ -6,11 +6,17 @@ import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
+  //Ensure that the application Initialized successfully
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Connect to Firebase project
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Print path of pages in debug console
   GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
+
+  // Run application
   runApp(MultiProvider(
     providers: [Provider(create: (context) => MyRouter())],
     child: const ECom(),
