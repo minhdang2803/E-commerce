@@ -31,6 +31,7 @@ class ECom extends StatelessWidget {
     final router = Provider.of<MyRouter>(context, listen: false).myRouter;
     return MaterialApp.router(
       title: 'Ecom',
+      debugShowCheckedModeBanner: false,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,
