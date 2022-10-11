@@ -1,6 +1,5 @@
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
-import 'package:ecom/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -132,6 +131,7 @@ class OnboardingScreenComponent extends StatelessWidget {
                 text['title']!,
                 style: AppTypography.headline.copyWith(
                   color: AppColor.textPrimary,
+                  fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
               ),
