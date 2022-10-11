@@ -1,13 +1,16 @@
+import 'package:ecom/theme/app_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   static const String routeName = 'HomeScreen';
   static MaterialPage page() {
     return MaterialPage(
-        child: HomeScreen(), key: ValueKey(routeName), name: routeName);
+      child: HomeScreen(),
+      key: ValueKey(routeName),
+      name: routeName,
+    );
   }
 
   @override
@@ -17,11 +20,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-          child: Center(
-        child: Text('Hello World'),
-      )),
-    );
+    return Scaffold(
+        // backgroundColor: AppColor.primary,
+        body: SafeArea(
+            child: Center(
+      child: Text('Hello'),
+    )));
   }
 }

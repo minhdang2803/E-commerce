@@ -1,6 +1,11 @@
+import 'package:ecom/controllers/app_state.dart';
 import 'package:ecom/controllers/router.dart';
+import 'package:ecom/theme/app_theme.dart';
+import 'package:ecom/utils/restart_util.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
@@ -17,24 +22,41 @@ Future<void> main() async {
   GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
 
   // Run application
+  final appState = AppState();
   runApp(MultiProvider(
-    providers: [Provider(create: (context) => MyRouter())],
+    providers: [
+      ChangeNotifierProvider(create: (context) => appState),
+      Provider(create: (context) => MyRouter(appState)),
+    ],
     child: const ECom(),
   ));
 }
 
-class ECom extends StatelessWidget {
+class ECom extends StatefulWidget {
   const ECom({super.key});
 
   @override
+  State<ECom> createState() => _EComState();
+}
+
+class _EComState extends State<ECom> {
+  @override
   Widget build(BuildContext context) {
     final router = Provider.of<MyRouter>(context, listen: false).myRouter;
-    return MaterialApp.router(
-      title: 'Ecom',
-      debugShowCheckedModeBanner: false,
-      routerDelegate: router.routerDelegate,
-      routeInformationParser: router.routeInformationParser,
-      routeInformationProvider: router.routeInformationProvider,
+    return RestartWidget(
+      child: ScreenUtilInit(
+        designSize: const Size(360, 640),
+        builder: (context, child) {
+          return MaterialApp.router(
+            title: 'Ecom',
+            theme: AppTheme.lightTheme,
+            debugShowCheckedModeBanner: false,
+            routerDelegate: router.routerDelegate,
+            routeInformationParser: router.routeInformationParser,
+            routeInformationProvider: router.routeInformationProvider,
+          );
+        },
+      ),
     );
   }
 }
