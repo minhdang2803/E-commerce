@@ -4,3 +4,7 @@
 /// import 'controller.dart';
 
 export 'router.dart';
+export 'app_state.dart';
+export 'login_provider.dart';
+export 'base_provider.dart';
+export 'base_provider_model.dart';

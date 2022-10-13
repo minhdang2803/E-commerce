@@ -1,9 +1,13 @@
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
+import 'package:ecom/views/login_screen/login_screen.dart';
+import 'package:ecom/views/register_screen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'onboarding_component.dart';
 
 class OnboardingScreen extends StatelessWidget {
   OnboardingScreen({super.key});
@@ -25,6 +29,7 @@ class OnboardingScreen extends StatelessWidget {
           children: [
             50.verticalSpace,
             _buildPicture(context),
+            10.verticalSpace,
             _buildPageIndicator(),
             60.verticalSpace,
             _buildOptions(context),
@@ -42,10 +47,13 @@ class OnboardingScreen extends StatelessWidget {
           controller: controller,
           children: [
             for (final element in text)
-              OnboardingScreenComponent(image: element['url'] as String, text: {
-                'title': element['title'] as String,
-                'sub': element['sub'] as String
-              })
+              OnboardingScreenComponent(
+                image: element['url'] as String,
+                text: {
+                  'title': element['title'] as String,
+                  'sub': element['sub'] as String
+                },
+              )
           ],
         ),
       ),
@@ -69,14 +77,14 @@ class OnboardingScreen extends StatelessWidget {
           text: 'Sign In',
           color: AppColor.buttonColor,
           context: context,
-          function: () {},
+          function: () => context.pushNamed(LoginScreen.routeName),
         ),
         10.verticalSpace,
         _buildButton(
           text: 'Sign Up',
           color: Colors.white,
           context: context,
-          function: () {},
+          function: () => context.pushNamed(RegisterScreen.routeName),
         ),
       ],
     );
@@ -108,50 +116,6 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-class OnboardingScreenComponent extends StatelessWidget {
-  final String image;
-  final Map<String, String> text;
-  const OnboardingScreenComponent(
-      {super.key, required this.image, required this.text});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SvgPicture.asset(
-          image,
-          height: 200.h,
-          width: 150.w,
-        ),
-        50.verticalSpace,
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            children: [
-              Text(
-                text['title']!,
-                style: AppTypography.headline.copyWith(
-                  color: AppColor.textPrimary,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              10.verticalSpace,
-              Text(
-                text['sub']!,
-                style: AppTypography.body.copyWith(
-                  color: AppColor.textPrimary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-List<String> pictures = [];
 List<Map<String, String>> text = [
   {
     'url': 'assets/onboarding_screen/onboarding_1.svg',

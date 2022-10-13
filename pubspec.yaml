@@ -47,6 +47,11 @@ dependencies:
   pinput: ^2.2.16
   flutter_native_splash: ^2.2.11
   smooth_page_indicator: ^1.0.0+2
+  font_awesome_flutter: ^10.2.1
+  firebase_auth: ^3.11.2
+  google_sign_in: ^5.4.2
+  dio: ^4.0.6
+  connectivity_plus: ^2.3.9
 
 dev_dependencies:
 
@@ -77,6 +82,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/auth/
     - assets/splash_screen/
     - assets/onboarding_screen/
 

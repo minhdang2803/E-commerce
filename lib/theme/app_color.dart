@@ -23,7 +23,7 @@ class AppColor {
   static Color iconBorder = Color(0xFFF3F3F3);
 
   //input text field border color
-  static Color inputTextBorder = Color(0xFFE3E3E3);
+  static Color inputTextBorder = ColorExtension.hexToColor('#DCDCDC');
 
   //default border color
   static Color defaultBorder = Color(0xFFE3E3E3);

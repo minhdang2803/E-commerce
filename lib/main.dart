@@ -1,10 +1,11 @@
 import 'package:ecom/controllers/app_state.dart';
+import 'package:ecom/controllers/controllers.dart';
+import 'package:ecom/controllers/register_provider.dart';
 import 'package:ecom/controllers/router.dart';
 import 'package:ecom/theme/app_theme.dart';
 import 'package:ecom/utils/restart_util.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'firebase_options.dart';
@@ -26,6 +27,8 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => appState),
+      ChangeNotifierProvider(create: (context) => RegisterProvider()),
+      ChangeNotifierProvider(create: (context) => LoginProvider()),
       Provider(create: (context) => MyRouter(appState)),
     ],
     child: const ECom(),

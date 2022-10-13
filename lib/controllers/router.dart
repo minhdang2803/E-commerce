@@ -1,5 +1,8 @@
 import 'package:ecom/controllers/app_state.dart';
-import 'package:ecom/views/onboarding_screen.dart';
+import 'package:ecom/views/login_screen/login_screen.dart';
+import 'package:ecom/views/onboarding_screen/onboarding_screen.dart';
+import 'package:ecom/views/register_screen/register_screen.dart';
+import 'package:ecom/views/reset_password/reset_password_screen.dart';
 import 'package:ecom/views/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,6 +37,21 @@ class MyRouter {
         pageBuilder: (context, state) => OnboardingScreen.page(),
       ),
       GoRoute(
+        path: '/login',
+        name: LoginScreen.routeName,
+        pageBuilder: (context, state) => LoginScreen.page(),
+      ),
+      GoRoute(
+        path: '/register',
+        name: RegisterScreen.routeName,
+        pageBuilder: (context, state) => RegisterScreen.page(),
+      ),
+      GoRoute(
+        path: '/reset',
+        name: ResetPassword.routeName,
+        pageBuilder: (context, state) => ResetPassword.page(),
+      ),
+      GoRoute(
         path: '/home',
         name: HomeScreen.routeName,
         pageBuilder: (context, state) => HomeScreen.page(),
@@ -44,7 +62,9 @@ class MyRouter {
         appState.initializedApp();
         return null;
       }
-      if (state.subloc == '/splash' && appState.isSplashScreenDone && !appState.isOnboardingSceenDone) {
+      if (state.subloc == '/splash' &&
+          appState.isSplashScreenDone &&
+          !appState.isOnboardingSceenDone) {
         appState.onBoaringScreenProcess();
         return state.namedLocation(OnboardingScreen.routeName);
       }
