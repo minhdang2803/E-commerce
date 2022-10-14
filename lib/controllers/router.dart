@@ -15,7 +15,8 @@ import '../views/home_screen.dart';
 /// tại go_router mới migrate lên 5.)
 class MyRouter {
   final AppState appState;
-  MyRouter(this.appState);
+  bool isLoggedIn;
+  MyRouter(this.appState, this.isLoggedIn);
   late GoRouter myRouter = GoRouter(
     refreshListenable: appState,
     initialLocation: '/',
@@ -66,7 +67,11 @@ class MyRouter {
           appState.isSplashScreenDone &&
           !appState.isOnboardingSceenDone) {
         appState.onBoaringScreenProcess();
-        return state.namedLocation(OnboardingScreen.routeName);
+        if (isLoggedIn) {
+          return state.namedLocation(HomeScreen.routeName);
+        } else {
+          return state.namedLocation(OnboardingScreen.routeName);
+        }
       }
       return null;
     },

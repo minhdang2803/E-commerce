@@ -1,6 +1,6 @@
 import 'package:ecom/controllers/login_provider.dart';
 import 'package:ecom/theme/app_color.dart';
-import 'package:ecom/utils/extension.dart';
+import 'package:ecom/extension/string_extension.dart';
 import 'package:ecom/views/reset_password/reset_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,8 +32,7 @@ class LoginComponent extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.only(top: 20.h, right: 20.w, left: 20.w),
             child: Form(
-              key: Provider.of<LoginProvider>(context, listen: false)
-                  .loginFormKey,
+              key: Provider.of<LoginProvider>(context, listen: false).formKey,
               child: Column(
                 children: [
                   30.verticalSpace,
@@ -79,7 +78,7 @@ class LoginComponent extends StatelessWidget {
                     function: () {
                       if (context
                           .read<LoginProvider>()
-                          .loginFormKey
+                          .formKey
                           .currentState!
                           .validate()) {
                         Provider.of<LoginProvider>(context, listen: false)

@@ -1,9 +1,8 @@
-import 'package:ecom/utils/extension.dart';
+import 'package:ecom/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../controllers/login_provider.dart';
 import '../../controllers/register_provider.dart';
 import '../../theme/app_color.dart';
 import '../../utils/custom_button.dart';
@@ -23,20 +22,21 @@ class RegisterComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 0,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.75,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.r), topRight: Radius.circular(30.r)),
-        ),
-        child: SingleChildScrollView(
+      child: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.75,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.r),
+                topRight: Radius.circular(30.r)),
+          ),
           child: Padding(
             padding: EdgeInsets.only(top: 20.h, right: 20.w, left: 20.w),
             child: Form(
               key: context.read<RegisterProvider>().registerForm,
-              child: Column(
+              child: ListView(
                 children: [
                   30.verticalSpace,
                   TextFieldCustom(
@@ -89,6 +89,7 @@ class RegisterComponent extends StatelessWidget {
                       }
                     },
                   ),
+                  const Expanded(child: SizedBox())
                 ],
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:ecom/controllers/register_provider.dart';
+import 'package:ecom/controllers/reset_provider.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 
@@ -9,48 +10,72 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../controllers/base_provider.dart';
+import '../../utils/show_dialog.dart';
+import '../home_screen.dart';
+
 class ResetPassword extends StatelessWidget {
-  ResetPassword({super.key});
+  const ResetPassword({super.key});
   static const String routeName = "ResetPassword";
   static MaterialPage page() {
-    return MaterialPage(
+    return const MaterialPage(
       child: ResetPassword(),
       name: routeName,
-      key: const ValueKey(routeName),
+      key: ValueKey(routeName),
     );
   }
 
-  final TextEditingController email = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RegisterProvider(),
-      builder: (context, child) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: AppColor.primary,
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: SvgPicture.asset('assets/auth/login_oval.svg'),
+    return Consumer<RegisterProvider>(
+      builder: (context, value, child) {
+        if (value.viewState == ViewState.loading) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (timeStamp) {
+              showDialog(
+                context: context,
+                builder: (context) => WillPopScope(
+                  onWillPop: () async {
+                    value.isPop = true;
+                    value.isCancel = true;
+                    return true;
+                  },
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
                 ),
-                _buildBackButton(context),
-                _buildWelcomeText(context),
-                ResetPasswordComponent(email: email),
-              ],
-            ),
-          ),
-        );
+              );
+            },
+          );
+        } else if (value.viewState == ViewState.done) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            context.pop();
+          });
+        } else if (value.viewState == ViewState.fail) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            !value.isPop ? Navigator.pop(context, true) : null;
+            showDialogAlert(
+                context: context,
+                title: 'Alert!',
+                buttonText: 'Got it!',
+                message: value.errorMessage,
+                onPressed: () {
+                  Navigator.pop(context, true);
+                });
+            value.setStatus(ViewState.none);
+          });
+        }
+        return _buildUI(context);
       },
+      child: _buildUI(context),
     );
   }
 
   Widget _buildBackButton(BuildContext context) {
     return Positioned(
-      top: 20.h,
+      top: 30.h,
       left: 10.w,
       child: IconButton(
         padding: EdgeInsets.zero,
@@ -63,9 +88,32 @@ class ResetPassword extends StatelessWidget {
     );
   }
 
+  Widget _buildUI(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: AppColor.primary,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              right: 0,
+              child: SvgPicture.asset('assets/auth/login_oval.svg'),
+            ),
+            _buildBackButton(context),
+            _buildWelcomeText(context),
+            ResetPasswordComponent(
+              email: context.read<ResetPasswordProvider>().instance.email,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildWelcomeText(BuildContext context) {
     return Positioned(
-      top: 60.h,
+      top: 70.h,
       left: 20.w,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,

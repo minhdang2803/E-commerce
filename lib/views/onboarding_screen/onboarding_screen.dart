@@ -25,15 +25,17 @@ class OnboardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            50.verticalSpace,
-            _buildPicture(context),
-            10.verticalSpace,
-            _buildPageIndicator(),
-            60.verticalSpace,
-            _buildOptions(context),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              20.verticalSpace,
+              _buildPicture(context),
+              10.verticalSpace,
+              _buildPageIndicator(),
+              60.verticalSpace,
+              _buildOptions(context),
+            ],
+          ),
         ),
       ),
     );

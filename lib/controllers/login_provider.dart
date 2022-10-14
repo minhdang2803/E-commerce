@@ -1,5 +1,6 @@
 import 'package:ecom/controllers/base_provider.dart';
 import 'package:ecom/controllers/base_provider_model.dart';
+import 'package:ecom/utils/shared_preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -17,11 +18,9 @@ class LoginProvider extends BaseProvider {
   final BaseProviderModel<LoginRequestModel> _loginData =
       BaseProviderModel.init(data: LoginRequestModel());
 
-  LoginRequestModel get loginInstance => _loginData.data!;
+  LoginRequestModel get instance => _loginData.data!;
 
-  final loginFormKey = GlobalKey<FormState>();
-
-  final forgetfForm = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   bool isPop = false;
   bool isCancel = false;
@@ -50,6 +49,7 @@ class LoginProvider extends BaseProvider {
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
+        SharedPref.instance.setBool('isLoggedIn', true);
         await FirebaseAuth.instance.signInWithCredential(credential);
       }
       setStatus(ViewState.done, notify: true);
@@ -79,10 +79,16 @@ class LoginProvider extends BaseProvider {
       isCancel = false;
       isPop = false;
       setStatus(ViewState.loading, notify: true);
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: loginInstance.loginEmail.text,
-        password: loginInstance.loginPassword.text,
-      );
+
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+        email: instance.loginEmail.text,
+        password: instance.loginPassword.text,
+      )
+          .whenComplete(() async {
+        SharedPref.instance.setBool('isLoggedIn', true);
+      });
+
       setStatus(ViewState.done, notify: true);
     } on PlatformException catch (exception) {
       setStatus(ViewState.fail, notify: true);

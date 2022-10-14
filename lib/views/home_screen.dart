@@ -1,3 +1,4 @@
+import 'package:ecom/utils/shared_preference.dart';
 import 'package:ecom/views/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -31,10 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text('Hello'),
           TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Provider.of<LoginProvider>(context, listen: false)
                     .logoutGoogle();
                 context.goNamed(OnboardingScreen.routeName);
+                await SharedPref.instance.remove('accessToken');
               },
               child: Text('logout'))
         ],

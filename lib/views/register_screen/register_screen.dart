@@ -78,34 +78,30 @@ class RegisterScreen extends StatelessWidget {
 
 Widget _buildUI(BuildContext context) {
   return Scaffold(
-    resizeToAvoidBottomInset: false,
+    resizeToAvoidBottomInset: true,
     backgroundColor: AppColor.primary,
-    body: SafeArea(
-      child: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            right: 0,
-            child: SvgPicture.asset('assets/auth/login_oval.svg'),
-          ),
-          _buildBackButton(context),
-          _buildWelcomeText(context),
-          RegisterComponent(
-            email: context.read<RegisterProvider>().registerInstance.email,
-            password:
-                context.read<RegisterProvider>().registerInstance.password,
-            username:
-                context.read<RegisterProvider>().registerInstance.username,
-          )
-        ],
-      ),
+    body: Stack(
+      children: [
+        Positioned(
+          top: 0,
+          right: 0,
+          child: SvgPicture.asset('assets/auth/login_oval.svg'),
+        ),
+        _buildBackButton(context),
+        _buildWelcomeText(context),
+        RegisterComponent(
+          email: context.read<RegisterProvider>().registerInstance.email,
+          password: context.read<RegisterProvider>().registerInstance.password,
+          username: context.read<RegisterProvider>().registerInstance.username,
+        )
+      ],
     ),
   );
 }
 
 Widget _buildBackButton(BuildContext context) {
   return Positioned(
-    top: 20.h,
+    top: 30.h,
     left: 10.w,
     child: IconButton(
       padding: EdgeInsets.zero,
@@ -120,7 +116,7 @@ Widget _buildBackButton(BuildContext context) {
 
 Widget _buildWelcomeText(BuildContext context) {
   return Positioned(
-    top: 60.h,
+    top: 70.h,
     left: 20.w,
     child: SizedBox(
       width: MediaQuery.of(context).size.width * 0.7,

@@ -71,35 +71,33 @@ class LoginScreen extends StatelessWidget {
 
   Widget _buildUI(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColor.primary,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              right: 0,
-              child: SvgPicture.asset('assets/auth/login_oval.svg'),
-            ),
-            _buildBackButton(context),
-            _buildWelcomeText(context),
-            LoginComponent(
-              email: Provider.of<LoginProvider>(context, listen: false)
-                  .loginInstance
-                  .loginEmail,
-              password: Provider.of<LoginProvider>(context, listen: false)
-                  .loginInstance
-                  .loginPassword,
-            )
-          ],
-        ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            child: SvgPicture.asset('assets/auth/login_oval.svg'),
+          ),
+          _buildBackButton(context),
+          _buildWelcomeText(context),
+          LoginComponent(
+            email: Provider.of<LoginProvider>(context, listen: false)
+                .instance
+                .loginEmail,
+            password: Provider.of<LoginProvider>(context, listen: false)
+                .instance
+                .loginPassword,
+          )
+        ],
       ),
     );
   }
 
   Widget _buildBackButton(BuildContext context) {
     return Positioned(
-      top: 20.h,
+      top: 30.h,
       left: 10.w,
       child: IconButton(
         padding: EdgeInsets.zero,
@@ -114,7 +112,7 @@ class LoginScreen extends StatelessWidget {
 
   Widget _buildWelcomeText(BuildContext context) {
     return Positioned(
-      top: 60.h,
+      top: 70.h,
       left: 20.w,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,

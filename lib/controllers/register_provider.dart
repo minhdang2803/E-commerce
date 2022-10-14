@@ -1,4 +1,5 @@
 import 'package:ecom/controllers/controllers.dart';
+import 'package:ecom/utils/shared_preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,10 +31,14 @@ class RegisterProvider extends BaseProvider {
       isCancel = false;
       isPop = false;
       setStatus(ViewState.loading, notify: true);
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: registerInstance.email.text,
         password: registerInstance.password.text,
-      );
+      )
+          .whenComplete(() async {
+        SharedPref.instance.setBool('isLoggedIn', true);
+      });
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
       setStatus(ViewState.done, notify: true);
