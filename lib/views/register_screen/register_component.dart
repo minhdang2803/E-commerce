@@ -89,7 +89,6 @@ class RegisterComponent extends StatelessWidget {
                       }
                     },
                   ),
-                  const Expanded(child: SizedBox())
                 ],
               ),
             ),

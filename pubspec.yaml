@@ -84,6 +84,7 @@ flutter:
   assets:
     - assets/
     - assets/auth/
+    - assets/home_screen/
     - assets/splash_screen/
     - assets/onboarding_screen/
 

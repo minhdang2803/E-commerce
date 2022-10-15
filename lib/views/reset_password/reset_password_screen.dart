@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../../controllers/base_provider.dart';
 import '../../utils/show_dialog.dart';
-import '../home_screen.dart';
+import '../home_screen/home_screen.dart';
 
 class ResetPassword extends StatelessWidget {
   const ResetPassword({super.key});

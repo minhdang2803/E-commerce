@@ -6,6 +6,7 @@ class AppColor {
   static Color primary = ColorExtension.hexToColor('#0063C6');
   static Color buttonColor = ColorExtension.hexToColor('#FFC33A');
   static Color primaryDarker = ColorExtension.hexToColor('#025AB4');
+  static Color adsColor = ColorExtension.hexToColor('#286BC7');
 
   static Color textTitle = Colors.black;
   static Color textPrimary = ColorExtension.hexToColor('#5F5F5F');

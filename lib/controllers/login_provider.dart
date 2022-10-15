@@ -2,6 +2,7 @@ import 'package:ecom/controllers/base_provider.dart';
 import 'package:ecom/controllers/base_provider_model.dart';
 import 'package:ecom/utils/shared_preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,8 +71,7 @@ class LoginProvider extends BaseProvider {
       await googleSignIn.disconnect();
     }
     await FirebaseAuth.instance.signOut();
-    setStatus(ViewState.none);
-    notifyListeners();
+    setStatus(ViewState.none, notify: true);
   }
 
   Future loginbyEmail() async {

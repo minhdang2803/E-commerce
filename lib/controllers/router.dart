@@ -6,7 +6,7 @@ import 'package:ecom/views/reset_password/reset_password_screen.dart';
 import 'package:ecom/views/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
-import '../views/home_screen.dart';
+import '../views/home_screen/home_screen.dart';
 
 /// Navigator 2.0, how to use?g
 /// https://pub.dev/documentation/go_router/latest/

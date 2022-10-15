@@ -12,6 +12,7 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.height,
     this.width,
+    this.fontSize = 20,
   }) : super(key: key);
 
   final String text;
@@ -20,6 +21,7 @@ class CustomButton extends StatelessWidget {
   final double? height;
   final double? width;
   final Color? textColor;
+  final double? fontSize;
 
   final Widget? icon;
   @override
@@ -43,8 +45,10 @@ class CustomButton extends StatelessWidget {
             icon != null ? 5.horizontalSpace : 0.horizontalSpace,
             Text(
               text,
-              style: AppTypography.title
-                  .copyWith(fontSize: 20.r, color: textColor),
+              style: AppTypography.title.copyWith(
+                fontSize: (fontSize as double).r,
+                color: textColor,
+              ),
             ),
           ],
         ),
