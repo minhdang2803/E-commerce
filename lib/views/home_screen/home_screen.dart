@@ -1,10 +1,20 @@
-import 'package:ecom/views/home_screen/home_component.dart';
+import 'package:ecom/controllers/controllers.dart';
+import 'package:ecom/utils/utils.dart';
+import 'package:ecom/views/home_screen/home_component/home_component.dart';
+import 'package:ecom/views/home_screen/product_component/product_component.dart';
+import 'package:ecom/views/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../theme/app_color.dart';
+import 'account_Component/account_component.dart';
+import 'card_component/card_component.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+  //
   static const String routeName = 'HomeScreen';
+  //
   static MaterialPage page() {
     return const MaterialPage(
       child: HomeScreen(),
@@ -27,22 +37,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> page = [
     const HomeComponent(),
-    Container(
-      color: Colors.red,
-    ),
-    Container(
-      color: Colors.blue,
-    ),
-    Container(
-      color: Colors.green,
-    ),
+    //Product
+    const ProductComponent(),
+    //Order/Cart
+    const CartComponent(),
+    //Account
+    const AccountComponent(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.primaryDarker,
-      body: page[_currentIndex],
+      // appBar: AppBar(actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.arrow_back),
+      //     onPressed: () {
+      //       Provider.of<LoginProvider>(context, listen: false).logoutGoogle();
+      //       SharedPref.instance.remove('isLoggedIn');
+      //       context.goNamed(OnboardingScreen.routeName);
+      //     },
+      //   )
+      // ]),
+      resizeToAvoidBottomInset: false,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: page,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         currentIndex: _currentIndex,
@@ -59,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset('assets/home_screen/ic-list.png'),
-            label: 'Order',
+            label: 'Cart',
           ),
           BottomNavigationBarItem(
             icon: Image.asset('assets/home_screen/ic-user.png'),

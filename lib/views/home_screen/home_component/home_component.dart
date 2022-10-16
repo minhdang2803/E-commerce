@@ -1,7 +1,8 @@
 import 'package:ecom/theme/app_font.dart';
+import 'package:ecom/views/home_screen/home_component/search_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_color.dart';
+import '../../../theme/app_color.dart';
 import 'ads_component.dart';
 
 class HomeComponent extends StatefulWidget {
@@ -12,37 +13,43 @@ class HomeComponent extends StatefulWidget {
 }
 
 class _HomeComponentState extends State<HomeComponent> {
+  final PageController _controller = PageController();
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: -80.h,
-          left: 0,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 300.h,
-            decoration: BoxDecoration(
-              color: AppColor.primary,
-              borderRadius:
-                  BorderRadius.only(bottomRight: Radius.circular(300.r)),
+    return Container(
+      color: AppColor.primaryDarker,
+      child: Stack(
+        children: [
+          Positioned(
+            top: -80.h,
+            left: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 300.h,
+              decoration: BoxDecoration(
+                color: AppColor.primary,
+                borderRadius:
+                    BorderRadius.only(bottomRight: Radius.circular(300.r)),
+              ),
             ),
           ),
-        ),
-        AdsCard(
-          color: [AppColor.adsColor, Colors.grey.shade200],
-          title: const ['Hoodie Colections', 'Many colors available'],
-          content: const [
-            'Latest shoe recommendations which is being hit right now',
-            'Latest shoe recommendations which is being hit right now'
-          ],
-          imageUrls: const [
-            'assets/home_screen/ads1.png',
-            'assets/home_screen/ads2.png'
-          ],
-        ),
-        const ShoppingComponent()
-      ],
+          const SearchBar(),
+          AdsCard(
+            controller: _controller,
+            color: [AppColor.adsColor, Colors.grey.shade200],
+            title: const ['Hoodie Colections', 'Many colors available'],
+            content: const [
+              'Latest shoe recommendations which is being hit right now',
+              'Latest shoe recommendations which is being hit right now'
+            ],
+            imageUrls: const [
+              'assets/home_screen/ads1.jpg',
+              'assets/home_screen/ads2.png'
+            ],
+          ),
+          const ShoppingComponent()
+        ],
+      ),
     );
   }
 }
@@ -59,10 +66,12 @@ class ShoppingComponent extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: 370.h,
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.r),
-                topRight: Radius.circular(20.r))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
+          ),
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [

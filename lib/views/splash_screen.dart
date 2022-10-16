@@ -7,7 +7,7 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   static const String routeName = 'SplashScreen';
   static MaterialPage page() {
-    return MaterialPage(
+    return const MaterialPage(
       child: SplashScreen(),
       key: ValueKey(routeName),
       name: routeName,
@@ -23,8 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.primary,
-      body: SafeArea(
-          child: Stack(
+      body: Stack(
         children: [
           Positioned(
             right: 0,
@@ -68,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           )
         ],
-      )),
+      ),
     );
   }
 }
