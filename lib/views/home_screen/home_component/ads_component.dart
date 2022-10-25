@@ -31,7 +31,7 @@ class AdsCard extends StatelessWidget {
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(30.r),
+              borderRadius: BorderRadius.circular(20.r),
               child: Container(
                 color: Colors.transparent,
                 width: 320.w,

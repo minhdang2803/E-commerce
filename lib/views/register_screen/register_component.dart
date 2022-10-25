@@ -39,13 +39,13 @@ class RegisterComponent extends StatelessWidget {
               child: ListView(
                 children: [
                   30.verticalSpace,
-                  TextFieldCustom(
+                  CustomTextField(
                     title: "Username",
                     hintText: 'My username',
                     controller: username,
                   ),
                   20.verticalSpace,
-                  TextFieldCustom(
+                  CustomTextField(
                     title: "Email",
                     hintText: 'abc@example.com',
                     controller: email,
@@ -59,7 +59,7 @@ class RegisterComponent extends StatelessWidget {
                     },
                   ),
                   20.verticalSpace,
-                  TextFieldCustom(
+                  CustomTextField(
                     title: "Password",
                     hintText: 'Input your password',
                     isPassword: true,

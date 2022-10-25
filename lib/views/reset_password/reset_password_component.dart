@@ -35,7 +35,7 @@ class ResetPasswordComponent extends StatelessWidget {
               child: Column(
                 children: [
                   30.verticalSpace,
-                  TextFieldCustom(
+                  CustomTextField(
                     title: "Email",
                     hintText: 'abc@example.com',
                     controller: email,

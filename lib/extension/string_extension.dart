@@ -8,4 +8,8 @@ extension StringExtension on String {
   bool isValidPassword() {
     return RegExp(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$").hasMatch(this);
   }
+
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
+  }
 }

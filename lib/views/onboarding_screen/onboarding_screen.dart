@@ -44,7 +44,7 @@ class OnboardingScreen extends StatelessWidget {
   Widget _buildPicture(BuildContext context) {
     return Center(
       child: SizedBox(
-        height: 500,
+        height: 380.h,
         child: PageView(
           controller: controller,
           children: [

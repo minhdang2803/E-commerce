@@ -1,12 +1,24 @@
 import 'package:ecom/theme/app_font.dart';
+import 'package:ecom/views/home_screen/home_component/product_item.dart';
 import 'package:ecom/views/home_screen/home_component/search_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../../controllers/home_provider.dart';
 import '../../../theme/app_color.dart';
 import 'ads_component.dart';
 
 class HomeComponent extends StatefulWidget {
   const HomeComponent({super.key});
+  static const String routeName = "HomeComponent";
+  static NoTransitionPage page() {
+    return const NoTransitionPage<void>(
+      child: HomeComponent(),
+      name: routeName,
+      key: ValueKey(routeName),
+    );
+  }
 
   @override
   State<HomeComponent> createState() => _HomeComponentState();
@@ -76,12 +88,43 @@ class ShoppingComponent extends StatelessWidget {
           child: Column(
             children: [
               CategoryComponent(
-                title: 'Category',
-                imageUrls: categoryUrls,
+                title: 'Shirt',
+                onTap: (item) => context.pushNamed(
+                  ProductItem.routeName,
+                  extra: <String, Object>{'item': item},
+                  params: <String, String>{
+                    'name': '${item.name.split(' ').join()}',
+                  },
+                ),
+                future: context.read<HomeProvider>().mockAPIShirt(),
               ),
-              10.verticalSpace,
-              CategoryComponent(title: 'New Product', imageUrls: newProduct),
-              CategoryComponent(title: 'Discount', imageUrls: newProduct)
+              CategoryComponent(
+                title: 'Shoes',
+                onTap: (item) {
+                  context.pushNamed(
+                    ProductItem.routeName,
+                    extra: <String, Object>{'item': item},
+                    params: <String, String>{
+                      'name': '${item.name.split(' ').join()}',
+                    },
+                  );
+                },
+                future: context.read<HomeProvider>().mockAPIShoes(),
+              ),
+              CategoryComponent(
+                title: 'Pants',
+                onTap: (item) => Router.neglect(
+                  context,
+                  () => context.goNamed(
+                    ProductItem.routeName,
+                    extra: <String, Object>{'item': item},
+                    params: <String, String>{
+                      'name': '${item.name.split(' ').join()}',
+                    },
+                  ),
+                ),
+                future: context.read<HomeProvider>().mockAPIPants(),
+              ),
             ],
           ),
         ),
@@ -92,9 +135,10 @@ class ShoppingComponent extends StatelessWidget {
 
 class CategoryComponent extends StatelessWidget {
   const CategoryComponent(
-      {super.key, required this.title, required this.imageUrls});
+      {super.key, required this.title, this.onTap, this.future});
   final String title;
-  final List<String> imageUrls;
+  final void Function(dynamic)? onTap;
+  final Future? future;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,28 +150,48 @@ class CategoryComponent extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: AppTypography.title,
-              ),
-              Text(
-                'See more',
-                style: AppTypography.title,
-              ),
+              Text(title, style: AppTypography.title),
+              Text('See more', style: AppTypography.title),
             ],
           ),
           10.verticalSpace,
           Expanded(
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return ItemComponent(
-                  imageUrl: imageUrls[index],
-                );
+            child: FutureBuilder(
+              future: future,
+              builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (snapshot.hasData && snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('No data'),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Errpr'),
+                    );
+                  } else {
+                    return ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        final item = snapshot.data![index];
+                        return GestureDetector(
+                          onTap: () => onTap!(item),
+                          child: ItemComponent(
+                            imageUrl: item.imageURL,
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) => 10.horizontalSpace,
+                      itemCount: snapshot.data!.length,
+                    );
+                  }
+                }
               },
-              separatorBuilder: (context, index) => 10.horizontalSpace,
-              itemCount: imageUrls.length,
             ),
           ),
         ],
@@ -137,7 +201,10 @@ class CategoryComponent extends StatelessWidget {
 }
 
 class ItemComponent extends StatelessWidget {
-  const ItemComponent({super.key, required this.imageUrl});
+  const ItemComponent({
+    super.key,
+    required this.imageUrl,
+  });
   final String imageUrl;
   @override
   Widget build(BuildContext context) {
@@ -152,20 +219,3 @@ class ItemComponent extends StatelessWidget {
     );
   }
 }
-
-List<String> categoryUrls = [
-  'assets/home_screen/category_shoe.png',
-  'assets/home_screen/category_shirt.png',
-  'assets/home_screen/category_pant.png'
-];
-
-List<String> newProduct = [
-  'assets/home_screen/product_shoe1.png',
-  'assets/home_screen/product_shoe2.png',
-  'assets/home_screen/product_shoe1.png'
-];
-List<String> product = [
-  'assets/home_screen/category_shoe.png',
-  'assets/home_screen/category_shirt.png',
-  'assets/home_screen/category_pant.png'
-];

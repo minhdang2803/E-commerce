@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../../controllers/base_provider.dart';
 import '../../utils/show_dialog.dart';
-import '../home_screen/home_screen.dart';
 
 class ResetPassword extends StatelessWidget {
   const ResetPassword({super.key});
@@ -27,49 +26,54 @@ class ResetPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RegisterProvider>(
-      builder: (context, value, child) {
-        if (value.viewState == ViewState.loading) {
-          WidgetsBinding.instance.addPostFrameCallback(
-            (timeStamp) {
-              showDialog(
-                context: context,
-                builder: (context) => WillPopScope(
-                  onWillPop: () async {
-                    value.isPop = true;
-                    value.isCancel = true;
-                    return true;
-                  },
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor,
+    return ChangeNotifierProvider(
+      create: (context) => ResetPasswordProvider(),
+      builder: (context, child) {
+        return Consumer<ResetPasswordProvider>(
+          builder: (context, value, child) {
+            if (value.viewState == ViewState.loading) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (timeStamp) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => WillPopScope(
+                      onWillPop: () async {
+                        value.isPop = true;
+                        value.isCancel = true;
+                        return true;
+                      },
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               );
-            },
-          );
-        } else if (value.viewState == ViewState.done) {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            context.pop();
-          });
-        } else if (value.viewState == ViewState.fail) {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            !value.isPop ? Navigator.pop(context, true) : null;
-            showDialogAlert(
-                context: context,
-                title: 'Alert!',
-                buttonText: 'Got it!',
-                message: value.errorMessage,
-                onPressed: () {
-                  Navigator.pop(context, true);
-                });
-            value.setStatus(ViewState.none);
-          });
-        }
-        return _buildUI(context);
+            } else if (value.viewState == ViewState.done) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                context.pop();
+              });
+            } else if (value.viewState == ViewState.fail) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                !value.isPop ? Navigator.pop(context, true) : null;
+                showDialogAlert(
+                    context: context,
+                    title: 'Alert!',
+                    buttonText: 'Got it!',
+                    message: value.errorMessage,
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    });
+                value.setStatus(ViewState.none);
+              });
+            }
+            return _buildUI(context);
+          },
+          child: _buildUI(context),
+        );
       },
-      child: _buildUI(context),
     );
   }
 

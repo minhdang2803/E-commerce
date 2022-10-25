@@ -1,8 +1,6 @@
 import 'package:ecom/controllers/base_provider.dart';
-import 'package:ecom/controllers/base_provider_model.dart';
 import 'package:ecom/utils/shared_preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,17 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../utils/exception.dart';
 
-class LoginRequestModel {
-  TextEditingController loginEmail = TextEditingController();
-  TextEditingController loginPassword = TextEditingController();
-}
-
 class LoginProvider extends BaseProvider {
-  final BaseProviderModel<LoginRequestModel> _loginData =
-      BaseProviderModel.init(data: LoginRequestModel());
-
-  LoginRequestModel get instance => _loginData.data!;
-
   final formKey = GlobalKey<FormState>();
 
   bool isPop = false;
@@ -32,13 +20,20 @@ class LoginProvider extends BaseProvider {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   GoogleSignInAccount? get user => _user;
+  set setAccount(GoogleSignInAccount account) {
+    _user = account;
+  }
 
   Future loginbyGoogle() async {
     try {
       isCancel = false;
       isPop = false;
       setStatus(ViewState.loading, notify: true);
-      final googleUser = await googleSignIn.signIn();
+      final googleUser = await googleSignIn.signIn().catchError((error) {
+        setStatus(ViewState.fail, notify: true);
+        setErrorMessage('Google account is not exist', notify: true);
+      });
+      _user = googleUser;
       if (googleUser == null) {
         setStatus(ViewState.fail, notify: true);
         setErrorMessage('Google account is not exist', notify: true);
@@ -56,7 +51,12 @@ class LoginProvider extends BaseProvider {
       setStatus(ViewState.done, notify: true);
     } on PlatformException catch (exception) {
       setStatus(ViewState.fail, notify: true);
-      setErrorMessage(exception.message!, notify: true);
+      if (exception.message ==
+          'com.google.android.gms.common.api.ApiException: 16:') {
+        setErrorMessage('No Google accounts found!', notify: true);
+      } else {
+        setErrorMessage(exception.message!, notify: true);
+      }
     } on FirebaseAuthException catch (exception) {
       setStatus(ViewState.fail, notify: true);
       setErrorMessage(exception.code, notify: true);
@@ -67,14 +67,15 @@ class LoginProvider extends BaseProvider {
   }
 
   Future logoutGoogle() async {
-    if (googleSignIn.currentUser != null) {
+    setStatus(ViewState.none, notify: true);
+    FirebaseAuth.instance.signOut();
+
+    if (FirebaseAuth.instance.currentUser != null) {
       await googleSignIn.disconnect();
     }
-    await FirebaseAuth.instance.signOut();
-    setStatus(ViewState.none, notify: true);
   }
 
-  Future loginbyEmail() async {
+  Future loginbyEmail({required String email, required String password}) async {
     try {
       isCancel = false;
       isPop = false;
@@ -82,17 +83,26 @@ class LoginProvider extends BaseProvider {
 
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-        email: instance.loginEmail.text,
-        password: instance.loginPassword.text,
+        email: email,
+        password: password,
       )
           .whenComplete(() async {
         SharedPref.instance.setBool('isLoggedIn', true);
       });
-
+      if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+        setErrorMessage('Google account is not verified', notify: true);
+        setStatus(ViewState.fail, notify: true);
+        return;
+      }
       setStatus(ViewState.done, notify: true);
     } on PlatformException catch (exception) {
       setStatus(ViewState.fail, notify: true);
-      setErrorMessage(exception.message!, notify: true);
+      if (exception.message ==
+          'com.google.android.gms.common.api.ApiException: 16:') {
+        setErrorMessage('No Google accounts found!', notify: true);
+      } else {
+        setErrorMessage(exception.message!, notify: true);
+      }
     } on FirebaseAuthException catch (exception) {
       setStatus(ViewState.fail, notify: true);
       setErrorMessage(exception.code, notify: true);

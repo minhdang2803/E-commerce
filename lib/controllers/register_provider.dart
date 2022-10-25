@@ -1,5 +1,4 @@
 import 'package:ecom/controllers/controllers.dart';
-import 'package:ecom/utils/shared_preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,8 +16,7 @@ class RegisterProvider extends BaseProvider {
   final BaseProviderModel<RegisterRequest> _registerData =
       BaseProviderModel.init(data: RegisterRequest());
   final googleSignIn = GoogleSignIn();
-  GoogleSignInAccount? _user;
-  GoogleSignInAccount? get user => _user;
+
   RegisterRequest get registerInstance => _registerData.data!;
   final registerForm = GlobalKey<FormState>();
   bool isPop = false;
@@ -37,10 +35,13 @@ class RegisterProvider extends BaseProvider {
         password: registerInstance.password.text,
       )
           .whenComplete(() async {
-        SharedPref.instance.setBool('isLoggedIn', true);
+        FirebaseAuth.instance.currentUser!
+            .updateDisplayName(registerInstance.username.text);
+        FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      }).catchError((error) {
+        setErrorMessage('Register failed');
+        setStatus(ViewState.done, notify: true);
       });
-      final user = FirebaseAuth.instance.currentUser!;
-      await user.sendEmailVerification();
       setStatus(ViewState.done, notify: true);
     } on PlatformException catch (exception) {
       setStatus(ViewState.fail, notify: true);

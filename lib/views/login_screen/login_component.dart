@@ -1,6 +1,5 @@
 import 'package:ecom/controllers/login_provider.dart';
 import 'package:ecom/theme/app_color.dart';
-import 'package:ecom/extension/string_extension.dart';
 import 'package:ecom/views/reset_password/reset_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,11 +10,24 @@ import 'package:provider/provider.dart';
 import '../../theme/app_font.dart';
 import '../../utils/utils.dart';
 
-class LoginComponent extends StatelessWidget {
+class LoginComponent extends StatefulWidget {
   const LoginComponent(
       {super.key, required this.email, required this.password});
   final TextEditingController email;
   final TextEditingController password;
+
+  @override
+  State<LoginComponent> createState() => _LoginComponentState();
+}
+
+class _LoginComponentState extends State<LoginComponent> {
+  @override
+  void dispose() {
+    widget.email.dispose();
+    widget.password.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -36,10 +48,10 @@ class LoginComponent extends StatelessWidget {
               child: Column(
                 children: [
                   30.verticalSpace,
-                  TextFieldCustom(
+                  CustomTextField(
                     title: "Email",
                     hintText: 'abc@example.com',
-                    controller: email,
+                    controller: widget.email,
                     validator: (value) {
                       if (value == null) {
                         return 'Please input correct Email';
@@ -50,11 +62,11 @@ class LoginComponent extends StatelessWidget {
                     },
                   ),
                   20.verticalSpace,
-                  TextFieldCustom(
+                  CustomTextField(
                     title: "Password",
                     hintText: 'Input your password',
                     isPassword: true,
-                    controller: password,
+                    controller: widget.password,
                     suffixIcon: Icon(
                       Icons.remove_red_eye,
                       color: AppColor.inputTextBorder,
@@ -82,7 +94,10 @@ class LoginComponent extends StatelessWidget {
                           .currentState!
                           .validate()) {
                         Provider.of<LoginProvider>(context, listen: false)
-                            .loginbyEmail();
+                            .loginbyEmail(
+                          email: widget.email.text,
+                          password: widget.password.text,
+                        );
                       }
                     },
                   ),

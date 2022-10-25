@@ -8,3 +8,4 @@ export 'app_state.dart';
 export 'login_provider.dart';
 export 'base_provider.dart';
 export 'base_provider_model.dart';
+export 'profile_provider.dart';

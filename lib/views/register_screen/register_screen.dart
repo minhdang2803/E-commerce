@@ -2,6 +2,7 @@ import 'package:ecom/controllers/register_provider.dart';
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
 import 'package:ecom/views/register_screen/register_component.dart';
+import 'package:ecom/views/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,69 +11,77 @@ import 'package:provider/provider.dart';
 
 import '../../controllers/base_provider.dart';
 import '../../utils/show_dialog.dart';
-import '../home_screen/home_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+  const RegisterScreen({super.key});
   static const String routeName = "RegisterScreen";
   static MaterialPage page() {
-    return MaterialPage(
+    return const MaterialPage(
       child: RegisterScreen(),
       name: routeName,
-      key: const ValueKey(routeName),
+      key: ValueKey(routeName),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RegisterProvider>(
-        builder: (context, value, child) {
-          if (value.viewState == ViewState.loading) {
-            WidgetsBinding.instance.addPostFrameCallback(
-              (timeStamp) {
-                showDialog(
-                  context: context,
-                  builder: (context) => WillPopScope(
-                    onWillPop: () async {
-                      value.isPop = true;
-                      value.isCancel = true;
-                      return true;
-                    },
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
+    return ChangeNotifierProvider(
+      create: (context) => RegisterProvider(),
+      builder: (context, child) {
+        return Consumer<RegisterProvider>(
+            builder: (context, value, child) {
+              if (value.viewState == ViewState.loading) {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (timeStamp) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => WillPopScope(
+                        onWillPop: () async {
+                          value.isPop = true;
+                          value.isCancel = true;
+                          return true;
+                        },
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
-              },
-            );
-          } else if (value.viewState == ViewState.done) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              if (value.isVarified == false) {
-                value.checkEmail();
-              } else if (value.isVarified) {
-                context.goNamed(HomeScreen.routeName);
-                value.isVarified = false;
+              } else if (value.viewState == ViewState.done) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  showDialogAlert(
+                      context: context,
+                      title: 'Alert!',
+                      buttonText: 'Back to Login',
+                      message: 'Please check your email and verify an account',
+                      onPressed: () {
+                        Navigator.pop(context);
+                        context.goNamed(LoginScreen.routeName);
+                      });
+                  value.setStatus(ViewState.none, notify: true);
+                });
+              } else if (value.viewState == ViewState.fail) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  !value.isPop ? Navigator.pop(context, true) : null;
+                  showDialogAlert(
+                      context: context,
+                      title: 'Alert!',
+                      buttonText: 'Got it!',
+                      message: value.errorMessage,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      });
+                  value.setStatus(ViewState.none, notify: true);
+                });
               }
-            });
-          } else if (value.viewState == ViewState.fail) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              !value.isPop ? Navigator.pop(context, true) : null;
-              showDialogAlert(
-                  context: context,
-                  title: 'Alert!',
-                  buttonText: 'Got it!',
-                  message: value.errorMessage,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  });
-              value.setStatus(ViewState.none, notify: true);
-            });
-          }
-          return _buildUI(context);
-        },
-        child: _buildUI(context));
+              return _buildUI(context);
+            },
+            child: _buildUI(context));
+      },
+    );
   }
 }
 

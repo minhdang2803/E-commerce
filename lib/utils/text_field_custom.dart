@@ -4,15 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/app_color.dart';
 
-class TextFieldCustom extends StatefulWidget {
-  TextFieldCustom({
+class CustomTextField extends StatefulWidget {
+  CustomTextField({
     super.key,
     required this.controller,
     required this.title,
-    this.isPassword = false,
     required this.hintText,
+    this.isPassword = false,
     this.suffixIcon,
     this.validator,
+    this.radius,
   });
   final TextEditingController controller;
   final String hintText;
@@ -20,11 +21,12 @@ class TextFieldCustom extends StatefulWidget {
   bool isPassword;
   Widget? suffixIcon;
   String? Function(String?)? validator;
+  double? radius;
   @override
-  State<TextFieldCustom> createState() => _TextFieldCustomState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
-class _TextFieldCustomState extends State<TextFieldCustom> {
+class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -59,19 +61,19 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
                 : null,
             // border:,
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.r),
+              borderRadius: BorderRadius.circular(widget.radius ?? 20.r),
               borderSide: BorderSide(color: AppColor.inputTextBorder),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.r),
+              borderRadius: BorderRadius.circular(widget.radius ?? 20.r),
               borderSide: BorderSide(color: AppColor.inputTextBorder),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.r),
+              borderRadius: BorderRadius.circular(widget.radius ?? 20.r),
               borderSide: const BorderSide(color: Colors.red),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.r),
+              borderRadius: BorderRadius.circular(widget.radius ?? 20.r),
               borderSide: const BorderSide(color: Colors.red),
             ),
             hintText: widget.hintText,

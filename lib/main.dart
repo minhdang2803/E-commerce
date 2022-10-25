@@ -1,6 +1,5 @@
 import 'package:ecom/controllers/controllers.dart';
-import 'package:ecom/controllers/register_provider.dart';
-import 'package:ecom/controllers/reset_provider.dart';
+import 'package:ecom/controllers/home_provider.dart';
 import 'package:ecom/theme/app_theme.dart';
 import 'package:ecom/utils/restart_util.dart';
 import 'package:ecom/utils/shared_preference.dart';
@@ -19,21 +18,24 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //  GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
   // Print path of pages in debug console
-  GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
+  // GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
   bool isLoggedIn = await SharedPref.instance.getBool('isLoggedIn');
   // Run application
   final appState = AppState();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => appState),
-      ChangeNotifierProvider(create: (context) => RegisterProvider()),
-      ChangeNotifierProvider(create: (context) => LoginProvider()),
-      ChangeNotifierProvider(create: (context) => ResetPasswordProvider()),
-      Provider(create: (context) => MyRouter(appState, isLoggedIn)),
-    ],
-    child: const ECom(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => appState),
+        ChangeNotifierProvider(create: (context) => LoginProvider()),
+        ChangeNotifierProvider(create: (context) => HomeProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        Provider(create: (context) => MyRouter(appState, isLoggedIn)),
+      ],
+      child: const ECom(),
+    ),
+  );
 }
 
 class ECom extends StatefulWidget {

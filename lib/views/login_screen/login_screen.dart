@@ -1,5 +1,6 @@
 import 'package:ecom/theme/app_color.dart';
 import 'package:ecom/theme/app_font.dart';
+import 'package:ecom/views/home_screen/home_component/home_component.dart';
 
 import 'package:ecom/views/screens.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import '../../controllers/controllers.dart';
 import '../../utils/show_dialog.dart';
 import 'login_component.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   static const String routeName = "LoginScreen";
   static MaterialPage page() {
@@ -21,6 +22,21 @@ class LoginScreen extends StatelessWidget {
       key: ValueKey(routeName),
     );
   }
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _loginEmail = TextEditingController();
+
+  final TextEditingController _loginPassword = TextEditingController();
+  // @override
+  // void dispose() {
+  //   _loginEmail.dispose();
+  //   _loginPassword.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +64,7 @@ class LoginScreen extends StatelessWidget {
             );
           } else if (value.viewState == ViewState.done) {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              context.goNamed(HomeScreen.routeName);
+              context.goNamed(HomeComponent.routeName);
             });
           } else if (value.viewState == ViewState.fail) {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -82,14 +98,7 @@ class LoginScreen extends StatelessWidget {
           ),
           _buildBackButton(context),
           _buildWelcomeText(context),
-          LoginComponent(
-            email: Provider.of<LoginProvider>(context, listen: false)
-                .instance
-                .loginEmail,
-            password: Provider.of<LoginProvider>(context, listen: false)
-                .instance
-                .loginPassword,
-          )
+          LoginComponent(email: _loginEmail, password: _loginPassword)
         ],
       ),
     );
